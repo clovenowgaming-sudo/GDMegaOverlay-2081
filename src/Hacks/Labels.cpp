@@ -330,16 +330,16 @@ void Labels::GJBaseGameLayerProcessCommands(GJBaseGameLayer *self, float dt)
 #include <Geode/modify/GJBaseGameLayer.hpp>
 class $modify(GMOLabelsBGL, GJBaseGameLayer)
 {
-	void processCommands(float dt)
+	void processCommands(float dt, bool isHalfTick, bool isLastTick)
 	{
 		Labels::GJBaseGameLayerProcessCommands(this, dt);
-		GJBaseGameLayer::processCommands(dt);
+		GJBaseGameLayer::processCommands(dt, isHalfTick, isLastTick);
 	}
 };
 
 class $modify(PlayerObject)
 {
-	void pushButton(PlayerButton btn)
+	bool pushButton(PlayerButton btn)
 	{
 		if(ShowTrajectory::isSimulation)
 			return PlayerObject::pushButton(btn);
@@ -353,7 +353,7 @@ class $modify(PlayerObject)
 			totalClicks++;
 		
 		click = true;
-		PlayerObject::pushButton(btn);
+		return PlayerObject::pushButton(btn);
 	}
 
 	void releaseButton(PlayerButton btn)

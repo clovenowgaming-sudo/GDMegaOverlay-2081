@@ -31,7 +31,7 @@ GameObject* getClosestObject(std::vector<GameObject*>& vec, StartPosObject* star
 
 void setupStartPos(StartPosObject* startPos)
 {
-    LevelSettingsObject* startPosSettings = (LevelSettingsObject*)startPos->m_unknown;
+    LevelSettingsObject* startPosSettings = startPos->m_startSettings;
     LevelSettingsObject* levelSettings = PlayLayer::get()->m_levelSettings;
 
     startPosSettings->m_startDual = levelSettings->m_startDual;
