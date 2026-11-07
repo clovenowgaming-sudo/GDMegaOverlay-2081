@@ -82,15 +82,6 @@ namespace util
 #include <chrono>
 inline unsigned long GetTickCount()
 {
-using namespace std::chrono;
-return static_cast<unsigned long>(duration_cast<milliseconds>(steady_clock::now().time_since_epoch()).count());
-}
-#endif
-
-#if !defined(_WIN32)
-#include <chrono>
-inline unsigned long GetTickCount()
-{
 	using namespace std::chrono;
 	return static_cast<unsigned long>(duration_cast<milliseconds>(steady_clock::now().time_since_epoch()).count());
 }
