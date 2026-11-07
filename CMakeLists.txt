@@ -4,10 +4,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
 set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 
-if (${CMAKE_SYSTEM_NAME} STREQUAL "iOS" OR ${CMAKE_SYSTEM_NAME} STREQUAL "Darwin")
-  set(CMAKE_OSX_ARCHITECTURES "arm64;x86_64")
-endif()
-
 project(GDMegaOverlay LANGUAGES CXX VERSION 1.0.0)
 
 file(GLOB SOURCES
@@ -32,8 +28,6 @@ target_include_directories(${PROJECT_NAME} PRIVATE src/)
 
 add_subdirectory($ENV{GEODE_SDK} ${CMAKE_CURRENT_BINARY_DIR}/geode)
 
-# ImGui for GD. matcool's gd-imgui-cocos is the one that is maintained for Android + current Geode.
-# NOTE: pin this to a real commit hash once you have a build that works.
 set(IMGUI_VERSION "v1.89.2")
 CPMAddPackage("gh:matcool/gd-imgui-cocos#geode")
 
