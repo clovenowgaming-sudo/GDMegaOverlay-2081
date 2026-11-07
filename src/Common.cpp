@@ -27,7 +27,6 @@ using namespace geode::prelude;
 void Common::calculateFramerate()
 {
 	bool vsync = GameManager::get()->getGameVariable("0030");
-	CCApplication::sharedApplication()->toggleVerticalSync(vsync);
 
 	if (vsync)
 		return;
@@ -329,8 +328,6 @@ void Common::uncompleteLevel()
 	level->m_normalPercent = 0;
 	level->m_newNormalPercent2 = 0;
 	level->m_orbCompletion = 0;
-	level->m_54 = 0;
-	level->m_k111 = 0;
 	level->m_bestPoints = 0;
 	level->m_bestTime = 0;
 

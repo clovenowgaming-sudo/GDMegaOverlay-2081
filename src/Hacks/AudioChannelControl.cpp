@@ -78,10 +78,6 @@ class $modify(PlayLayer)
 
 $execute
 {
-	void* setVolumeAddress = reinterpret_cast<void*>(GetProcAddress(
-		reinterpret_cast<HMODULE>(util::fmod_base), "?setVolume@ChannelControl@FMOD@@QAG?AW4FMOD_RESULT@@M@Z"));
-
-	Mod::get()->hook(setVolumeAddress, &AudioChannelControl::setVolumeHook, "setVolumeHook", tulip::hook::TulipConvention::Stdcall);
-
-	AudioChannelControl::speed = 1.f;
+// PORT 2.2081: the old setVolume hook used GetProcAddress("fmod.dll"), Windows only.
+AudioChannelControl::speed = 1.f;
 }
