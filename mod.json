@@ -5,7 +5,7 @@
 		"android": "2.2081"
 	},
 	"version": "v2.11.1-2081.1",
-	"id": "vinz.gd_mega_overlay_port",
+	"id": "vinz.megaoverlay",
 	"name": "GD Mega Overlay (2.2081 port)",
 	"developers": ["maxnu", "SpaghettDev", "Vinz (port)"],
 	"description": "GDMegaOverlay ported to GD 2.2081 / Geode 5.11.2 with an Android floating button. Mod By Vinz :3",
