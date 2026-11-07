@@ -225,7 +225,7 @@ bool GUI::alertPopup(const std::string& name, const std::string& content, const 
 
 		ImGui::SetWindowPos({(displaySize.x - windowSize.x) * 0.5f, (displaySize.y - windowSize.y) * 0.5f});
 
-		ImGui::Text(content.c_str());
+		ImGui::TextUnformatted(content.c_str());
 
 		if (ImGui::Button(yesButton.name.c_str()))
 		{
@@ -513,7 +513,7 @@ void GUI::textURL(const std::string& text, const std::string& link)
 		return;
 
 	ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.3f, 0.3f, 1, 1));
-	ImGui::Text(text.c_str());
+	ImGui::TextUnformatted(text.c_str());
 	ImGui::PopStyleColor();
 	if (ImGui::IsItemHovered())
 	{

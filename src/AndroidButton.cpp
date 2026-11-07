@@ -1,7 +1,11 @@
 // Android: small round draggable button. Tap = open/close the GDMegaOverlay UI.
 // Drag = move the button (position is saved). The button survives scene changes.
 #include <Geode/Geode.hpp>
+#if __has_include(<Geode/ui/SceneManager.hpp>)
 #include <Geode/ui/SceneManager.hpp>
+#elif __has_include(<Geode/utils/SceneManager.hpp>)
+#include <Geode/utils/SceneManager.hpp>
+#endif
 
 #include "AndroidButton.hpp"
 #include "GUI/GUI.h"

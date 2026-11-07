@@ -22,7 +22,7 @@ using namespace geode::prelude;
 
 class $modify(CCKeyboardDispatcher)
 {
-	bool dispatchKeyboardMSG(enumKeyCodes key, bool down, bool arr)
+	bool dispatchKeyboardMSG(enumKeyCodes key, bool down, bool arr, double timestamp)
 	{
 		if (!arr)
 		{
@@ -55,13 +55,13 @@ class $modify(CCKeyboardDispatcher)
 			}
 
 			if (!ImGuiCocos::get().isInitialized())
-				return CCKeyboardDispatcher::dispatchKeyboardMSG(key, down, arr);
+				return CCKeyboardDispatcher::dispatchKeyboardMSG(key, down, arr, timestamp);
 
 			if (const auto imKey = ConvertKeyEnum(key); imKey != ImGuiKey_None)
 				ImGui::GetIO().AddKeyEvent(imKey, down);
 		}
 
-		return CCKeyboardDispatcher::dispatchKeyboardMSG(key, down, arr);
+		return CCKeyboardDispatcher::dispatchKeyboardMSG(key, down, arr, timestamp);
 	}
 };
 
@@ -145,20 +145,20 @@ void GUI::init()
 	styleCombo = DirectoryCombo("Style", Mod::get()->getSaveDir() / "styles", "menu/style_path");
 	fontCombo = DirectoryCombo("Font", Mod::get()->getSaveDir() / "fonts", "menu/font_path");
 
-	std::string fontPath = Settings::get<std::string>("menu/font_path", string::wideToUtf8(defaultFontPath.wstring()));
+	std::string fontPath = Settings::get<std::string>("menu/font_path", std::string(defaultFontPath.string()));
 	
 	if(fontPath.empty() || !std::filesystem::exists(fontPath))
-		fontPath = string::wideToUtf8(defaultFontPath.wstring());
+		fontPath = std::string(defaultFontPath.string());
 
-	std::string stylePath = Settings::get<std::string>("menu/style_path", string::wideToUtf8(defaultStylePath.wstring()));
+	std::string stylePath = Settings::get<std::string>("menu/style_path", std::string(defaultStylePath.string()));
 	if(stylePath.empty() || !std::filesystem::exists(stylePath))
-		stylePath = string::wideToUtf8(defaultStylePath.wstring());
+		stylePath = std::string(defaultStylePath.string());
 	
 	GUI::loadStyle(stylePath);
 	setFont(fontPath);
 
 	shortcuts.clear();
-	shadowTexture = cocos2d::CCTextureCache::get()->addImage(string::wideToUtf8((Mod::get()->getResourcesDir() / "shadow.png").wstring()).c_str(), true);
+	shadowTexture = cocos2d::CCTextureCache::get()->addImage(std::string((Mod::get()->getResourcesDir() / "shadow.png").string()).c_str(), true);
 	load();
 }
 
@@ -449,9 +449,9 @@ void GUI::loadStyle(const std::filesystem::path& name)
 
 void GUI::setFont(const std::filesystem::path& font)
 {
-	ImFont* fnt = ImGui::GetIO().Fonts->AddFontFromFileTTF(string::wideToUtf8(font.wstring()).c_str(), fontScale * uiSizeFactor);
+	ImFont* fnt = ImGui::GetIO().Fonts->AddFontFromFileTTF(std::string(font.string()).c_str(), fontScale * uiSizeFactor);
 	ImGui::GetIO().FontDefault = fnt;
-	ImGuiCocos::get().reloadFontTexture();
+	/* PORT: reloadFontTexture not in this imgui-cocos version */
 }
 
 void GUI::setStyle()

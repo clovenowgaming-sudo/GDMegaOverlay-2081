@@ -18,7 +18,7 @@ DirectoryCombo::DirectoryCombo(std::string name, std::filesystem::path directory
 
     std::vector<std::string> files;
     for (const auto& entry : std::filesystem::directory_iterator(m_directory))
-        files.push_back(string::wideToUtf8(entry.path().filename().wstring()));
+        files.push_back(std::string(entry.path().filename().string()));
 
     int i = 0;
     for (const auto& entry : std::filesystem::directory_iterator(m_directory))
@@ -39,7 +39,7 @@ bool DirectoryCombo::draw()
 
     std::vector<std::string> files;
     for (const auto& entry : std::filesystem::directory_iterator(m_directory))
-        files.push_back(string::wideToUtf8(entry.path().filename().wstring()));
+        files.push_back(std::string(entry.path().filename().string()));
 
     if(ImGui::Combo(m_name.c_str(), &m_selectedIndex, [](void* vec, int idx, const char** out_text)
     {
@@ -51,7 +51,7 @@ bool DirectoryCombo::draw()
 	}, reinterpret_cast<void*>(&files), files.size()))
     {
         m_selectedFile = files.at(m_selectedIndex);
-        Mod::get()->setSavedValue<std::string>(m_settingName, string::wideToUtf8(getSelectedFilePath().wstring()));
+        Mod::get()->setSavedValue<std::string>(m_settingName, std::string(getSelectedFilePath().string()));
         return true;
     }
 
@@ -77,8 +77,8 @@ void DirectoryCombo::setSelectedFilePath(std::filesystem::path path)
         if(entry.path() == path)
         {
             m_selectedIndex = i;
-            m_selectedFile = string::wideToUtf8(entry.path().filename().wstring());
-            Mod::get()->setSavedValue<std::string>(m_settingName, string::wideToUtf8(getSelectedFilePath().wstring()));
+            m_selectedFile = std::string(entry.path().filename().string());
+            Mod::get()->setSavedValue<std::string>(m_settingName, std::string(getSelectedFilePath().string()));
             Mod::get()->saveData();
         }
         

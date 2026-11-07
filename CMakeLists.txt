@@ -40,3 +40,7 @@ include(cmake/nhjson.cmake)
 target_include_directories(${PROJECT_NAME} PRIVATE
   ${nhjson_SOURCE_DIR}/single_include
 )
+
+if (NOT MSVC)
+  target_compile_options(${PROJECT_NAME} PRIVATE -Wno-format-security -Wno-error)
+endif()

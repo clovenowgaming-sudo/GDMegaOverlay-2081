@@ -82,9 +82,9 @@ void GUI::Shortcut::drawWindow()
 				int displayKeyIndex = s.key - 511;
 				if (displayKeyIndex < 0)
 					displayKeyIndex = 0;
-				ImGui::Text(KeyNames[displayKeyIndex]);
+				ImGui::TextUnformatted(KeyNames[displayKeyIndex]);
 				GUI::sameLine();
-				ImGui::Text(s.name.c_str());
+				ImGui::TextUnformatted(s.name.c_str());
 				GUI::sameLine(ImGui::GetWindowSize().x - 30);
 				if (GUI::button(std::format("x##{}", std::to_string(uid))))
 				{
