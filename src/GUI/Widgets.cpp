@@ -118,11 +118,11 @@ bool GUI::hotkey(const std::string& name, int* keyPointer, const ImVec2& size_ar
 	if (!ImGui::ItemAdd(total_bb, id))
 		return false;
 
-	const bool focus_requested = ImGui::FocusableItemRegister(window, g.ActiveId == id);
+	const bool focus_requested = false;
 	const bool focus_requested_by_code = focus_requested;
 	const bool focus_requested_by_tab = focus_requested && !focus_requested_by_code;
 
-	const bool hovered = ImGui::ItemHoverable(frame_bb, id);
+	const bool hovered = ImGui::ItemHoverable(frame_bb, id, g.LastItemData.InFlags);
 
 	if (hovered)
 	{

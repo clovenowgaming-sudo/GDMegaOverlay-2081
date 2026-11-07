@@ -44,3 +44,5 @@ target_include_directories(${PROJECT_NAME} PRIVATE
 if (NOT MSVC)
   target_compile_options(${PROJECT_NAME} PRIVATE -Wno-format-security -Wno-error)
 endif()
+
+target_compile_definitions(${PROJECT_NAME} PRIVATE IMGUI_DEFINE_MATH_OPERATORS)
