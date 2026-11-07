@@ -65,9 +65,12 @@ namespace
 
 			// round button sprite from the game's own sheet
 			m_sprite = CCSprite::createWithSpriteFrameName("GJ_button_01.png");
-			m_sprite->setScale(0.6f);
-			m_radius = m_sprite->getContentSize().width * m_sprite->getScale() * 0.5f;
-			this->addChild(m_sprite);
+			if (m_sprite)
+			{
+				m_sprite->setScale(0.6f);
+				m_radius = m_sprite->getContentSize().width * m_sprite->getScale() * 0.5f;
+				this->addChild(m_sprite);
+			}
 
 			auto label = CCLabelBMFont::create("M", "bigFont.fnt");
 			label->setScale(0.5f);
