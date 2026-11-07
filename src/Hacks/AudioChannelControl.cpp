@@ -78,6 +78,6 @@ class $modify(PlayLayer)
 
 $execute
 {
-// PORT 2.2081: the old setVolume hook used GetProcAddress("fmod.dll"), Windows only.
-AudioChannelControl::speed = 1.f;
+	// PORT 2.2081: the old setVolume hook used GetProcAddress("fmod.dll"), Windows only.
+	AudioChannelControl::speed = 1.f;
 }
