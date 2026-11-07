@@ -161,18 +161,40 @@ namespace
 	GMOFloatingButton* s_button = nullptr;
 }
 
-void AndroidButton::ensureCreated()
+#include <Geode/modify/CCDirector.hpp>
+
+// Keeps the button attached to whatever scene is currently running.
+static void gmoAttachButton()
 {
-	if (s_button)
-		return;
+auto scene = CCDirector::get()->getRunningScene();
+if (!scene || typeinfo_cast<CCTransitionScene*>(scene))
+return;
 
-	s_button = GMOFloatingButton::create();
-	if (!s_button)
-		return;
-
-	s_button->retain();
-	SceneManager::get()->keepAcrossScenes(s_button);
+if (!s_button)
+{
+s_button = GMOFloatingButton::create();
+if (!s_button)
+return;
+s_button->retain();
 }
+
+if (s_button->getParent() == scene)
+return;
+
+s_button->removeFromParentAndCleanup(false);
+scene->addChild(s_button, 100000);
+}
+
+class $modify(GMOButtonDirector, CCDirector)
+{
+void drawScene()
+{
+gmoAttachButton();
+CCDirector::drawScene();
+}
+};
+
+void AndroidButton::ensureCreated() {}
 
 #else
 
