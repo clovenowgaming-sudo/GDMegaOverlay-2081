@@ -58,7 +58,6 @@ void init()
 
 void initGUI()
 {
-	ImGui::GetCurrentContext()->PlatformLocaleDecimalPoint = *localeconv()->decimal_point;
 	GUI::windows.clear();
 	
 	GUI::Window generalWindow("General", [] {
