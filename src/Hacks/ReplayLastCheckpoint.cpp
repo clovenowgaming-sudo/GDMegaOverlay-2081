@@ -51,7 +51,7 @@ class $modify(ButtonsClass, EndLevelLayer)
 
 
 		CCObject* object;
-		CCARRAY_FOREACH(layer->getChildren(), object)
+		for (CCObject* object : CCArrayExt<CCObject*>(layer->getChildren()))
 		{
 			if (auto menu = typeinfo_cast<CCMenu*>(object); menu && menu->getChildrenCount() > 1)
 				buttonsMenu = menu;
@@ -67,14 +67,14 @@ class $modify(ButtonsClass, EndLevelLayer)
 
 		if (buttonsMenu->getChildrenCount() == 2)
 		{
-			getChild<CCMenuItemSpriteExtra>(buttonsMenu, 0)->setPositionX(-100.f);
-			getChild<CCMenuItemSpriteExtra>(buttonsMenu, 1)->setPositionX(100.f);
+			static_cast<CCMenuItemSpriteExtra*>(buttonsMenu->getChildren()->objectAtIndex(0))->setPositionX(-100.f);
+			static_cast<CCMenuItemSpriteExtra*>(buttonsMenu->getChildren()->objectAtIndex(1))->setPositionX(100.f);
 		}
 		else
 		{
-			getChild<CCMenuItemSpriteExtra>(buttonsMenu, 0)->setPositionX(-130.f);
-			getChild<CCMenuItemSpriteExtra>(buttonsMenu, 1)->setPositionX(130.f);
-			getChild<CCMenuItemSpriteExtra>(buttonsMenu, 2)->setPositionX(-45.f);
+			static_cast<CCMenuItemSpriteExtra*>(buttonsMenu->getChildren()->objectAtIndex(0))->setPositionX(-130.f);
+			static_cast<CCMenuItemSpriteExtra*>(buttonsMenu->getChildren()->objectAtIndex(1))->setPositionX(130.f);
+			static_cast<CCMenuItemSpriteExtra*>(buttonsMenu->getChildren()->objectAtIndex(2))->setPositionX(-45.f);
 			practiceButton->setPositionX(45.f);
 		}
 

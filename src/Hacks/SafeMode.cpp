@@ -31,7 +31,7 @@ class $modify(EndLevelLayer)
 
 
 		CCObject* object;
-		CCARRAY_FOREACH(layer->getChildren(), object)
+		for (CCObject* object : CCArrayExt<CCObject*>(layer->getChildren()))
 		{
 			if (auto textArea = dynamic_cast<TextArea*>(object); textArea)
 				endScreenTextArea = textArea;

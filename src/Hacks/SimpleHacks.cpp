@@ -24,9 +24,9 @@ class $modify(HardStreak)
 				};
 
 				this->setColor({
-					(byte)(trailColor[0] * 255),
-					(byte)(trailColor[1] * 255),
-					(byte)(trailColor[2] * 255)}
+					(uint8_t)(trailColor[0] * 255),
+					(uint8_t)(trailColor[1] * 255),
+					(uint8_t)(trailColor[2] * 255)}
 				);
 			}
 		}
