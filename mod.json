@@ -4,10 +4,14 @@
 		"win": "2.2081",
 		"android": "2.2081"
 	},
-	"version": "v2.11.1-2081.1",
+	"version": "v1.0.0",
 	"id": "vinz.megaoverlay",
 	"name": "GD Mega Overlay (2.2081 port)",
-	"developers": ["maxnu", "SpaghettDev", "Vinz (port)"],
+	"developers": [
+		"maxnu",
+		"SpaghettDev",
+		"Vinz (port)"
+	],
 	"description": "GDMegaOverlay ported to GD 2.2081 / Geode 5.11.2 with an Android floating button. Mod By Vinz :3",
 	"repository": "https://github.com/maxnut/GDMegaOverlay",
 	"resources": {
@@ -20,9 +24,6 @@
 		]
 	},
 	"dependencies": {
-		"geode.node-ids": {
-			"version": ">=v1.9.1",
-			"importance": "recommended"
-		}
+		"geode.node-ids": ">=v1.9.1"
 	}
 }
