@@ -326,6 +326,7 @@ void initGUI()
 				}
 			});
 
+		GUI::checkbox("No Mirror Portal", "hack/no_mirror_portal", false);
 		JsonPatches::drawFromPatches(JsonPatches::level);
 	});
 	levelWindow.position = {550, 50};
@@ -466,7 +467,7 @@ void initGUI()
 	GUI::addWindow(menuSettings);
 
 	GUI::Window playerWindow("Player", [] { 
-		{ GUI::checkbox("No Death Effect", "hack/no_death_effect", false); if (GUI::checkbox("NoClip", "patch/NoClip", false)) { Common::updateCheating(); SafeMode::updateAuto(); } GUI::tooltip("Hook based. Turns Safe Mode on automatically when Auto Safe Mode is enabled."); JsonPatches::drawFromPatches(JsonPatches::player); };
+		{ GUI::checkbox("No Death Effect", "hack/no_death_effect", false); GUI::checkbox("Solid Wave Trail", "hack/solid_wave", false); GUI::checkbox("No Ghost Trail", "hack/no_ghost_trail", false); if (GUI::checkbox("NoClip", "patch/NoClip", false)) { Common::updateCheating(); SafeMode::updateAuto(); } GUI::tooltip("Hook based. Turns Safe Mode on automatically when Auto Safe Mode is enabled."); JsonPatches::drawFromPatches(JsonPatches::player); };
 		
 		GUI::checkbox("Show Trajectory", "player/show_trajectory/enabled");
 

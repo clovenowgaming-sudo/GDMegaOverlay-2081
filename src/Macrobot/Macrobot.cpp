@@ -1,6 +1,5 @@
-// Macrobot rewritten for GD 2.2081 / Geode 5.
-// Records GJBaseGameLayer::handleButton calls with the game's own step counter and plays them back
-// by calling handleButton at the same step. Practice checkpoints cut the recording back to the respawn frame.
+// Macrobot for GD 2.2081 / Geode 5.
+// Records GJBaseGameLayer::handleButton with a checkpoint-aware step counter and replays it at the same step.
 #include "Macrobot.h"
 
 #include <Geode/Geode.hpp>
@@ -13,6 +12,7 @@
 #include <chrono>
 #include <filesystem>
 #include <fstream>
+#include <unordered_map>
 
 using namespace geode::prelude;
 
@@ -22,12 +22,18 @@ namespace Macrobot
 	unsigned int actionIndex = 0;
 	Macro macro;
 
-	static bool injecting = false;
-	static std::vector<std::string> files;
-	static int selectedFile = -1;
-	static std::string status;
+	namespace
+	{
+		bool injecting = false;
+		int frameOffset = 0;
+		bool checkpointLoaded = false;
+		std::unordered_map<CheckpointObject*, int> checkpointFrames;
+		std::vector<std::string> files;
+		int selectedFile = -1;
+		std::string status;
+	}
 
-	static std::filesystem::path macroDir()
+	std::filesystem::path macroDir()
 	{
 		auto p = Mod::get()->getSaveDir() / "macros";
 		std::error_code ec;
@@ -35,13 +41,18 @@ namespace Macrobot
 		return p;
 	}
 
-	// PORT-CHECK: GJGameState::m_currentProgress is the step counter in the 2.2081 bindings
-	static int currentFrame()
+	int rawProgress()
 	{
 		auto pl = PlayLayer::get();
 		if (!pl)
 			return 0;
 		return static_cast<int>(pl->m_gameState.m_currentProgress);
+	}
+
+	// the game's counter + a correction we maintain ourselves, so checkpoint respawns always rewind it
+	int currentFrame()
+	{
+		return rawProgress() + frameOffset;
 	}
 
 	void getMacros()
@@ -56,7 +67,7 @@ namespace Macrobot
 			selectedFile = -1;
 	}
 
-	static void saveMacro()
+	void saveMacro()
 	{
 		if (macro.inputs.empty())
 		{
@@ -81,7 +92,7 @@ namespace Macrobot
 		getMacros();
 	}
 
-	static void loadMacro(std::string const& name)
+	void loadMacro(std::string const& name)
 	{
 		std::ifstream f(macroDir() / name);
 		if (!f)
@@ -117,13 +128,14 @@ namespace Macrobot
 		status = "Loaded " + std::to_string(macro.inputs.size()) + " inputs";
 	}
 
-	// called after the level (re)starts or a checkpoint is loaded
+	// after a restart / checkpoint respawn, with currentFrame() already corrected
 	void onRespawn()
 	{
 		int f = currentFrame();
 
 		if (playerMode == RECORDING)
 		{
+			// everything recorded at or after the respawn frame belongs to the attempt that just died
 			macro.inputs.erase(
 				std::remove_if(macro.inputs.begin(), macro.inputs.end(), [f](Input const& i) { return i.frame >= f; }),
 				macro.inputs.end());
@@ -134,58 +146,34 @@ namespace Macrobot
 			while (actionIndex < macro.inputs.size() && macro.inputs[actionIndex].frame < f)
 				actionIndex++;
 		}
+
+		if (playerMode != DISABLED)
+			log::info("[GMO-Macro] respawn: raw={} offset={} frame={} inputs={}", rawProgress(), frameOffset, f, macro.inputs.size());
 	}
 
-	void drawWindow()
+	void onCheckpointStored(CheckpointObject* checkpoint)
 	{
-		if (ImGui::RadioButton("Disable", playerMode == DISABLED))
-			playerMode = DISABLED;
+		checkpointFrames[checkpoint] = currentFrame();
+	}
 
-		if (ImGui::RadioButton("Record", playerMode == RECORDING))
+	void onCheckpointLoaded(CheckpointObject* checkpoint)
+	{
+		auto it = checkpointFrames.find(checkpoint);
+		if (it != checkpointFrames.end())
 		{
-			playerMode = RECORDING;
-			macro.inputs.clear();
-			macro.framerate = 240.f;
-			status = "Recording: restart the level";
+			frameOffset = it->second - rawProgress();
+			checkpointLoaded = true;
 		}
+		onRespawn();
+	}
 
-		if (ImGui::RadioButton("Play", playerMode == PLAYBACK))
-		{
-			playerMode = PLAYBACK;
-			actionIndex = 0;
-			status = "Playback: restart the level";
-		}
-
-		ImGui::Separator();
-		ImGui::Text("Inputs: %d", (int)macro.inputs.size());
-
-		if (ImGui::Button("Save"))
-			saveMacro();
-		ImGui::SameLine();
-		if (ImGui::Button("Clear"))
-		{
-			macro.inputs.clear();
-			actionIndex = 0;
-		}
-
-		ImGui::Separator();
-		if (ImGui::Button("Refresh list"))
-			getMacros();
-
-		const char* preview = (selectedFile >= 0 && selectedFile < (int)files.size()) ? files[selectedFile].c_str() : "Select macro";
-		if (ImGui::BeginCombo("##gmomacros", preview))
-		{
-			for (int i = 0; i < (int)files.size(); i++)
-				if (ImGui::Selectable(files[i].c_str(), selectedFile == i))
-					selectedFile = i;
-			ImGui::EndCombo();
-		}
-
-		if (ImGui::Button("Load") && selectedFile >= 0 && selectedFile < (int)files.size())
-			loadMacro(files[selectedFile]);
-
-		if (!status.empty())
-			ImGui::TextWrapped("%s", status.c_str());
+	void onReset()
+	{
+		// a respawn without a checkpoint is a fresh start: frame 0, whatever the game's counter says
+		if (!checkpointLoaded)
+			frameOffset = -rawProgress();
+		checkpointLoaded = false;
+		onRespawn();
 	}
 
 	bool isThePlayLayer(GJBaseGameLayer* layer)
@@ -221,6 +209,58 @@ namespace Macrobot
 		macro.inputs.push_back(in);
 	}
 
+	void drawWindow()
+	{
+		if (ImGui::RadioButton("Disable", playerMode == DISABLED))
+			playerMode = DISABLED;
+
+		if (ImGui::RadioButton("Record", playerMode == RECORDING))
+		{
+			playerMode = RECORDING;
+			macro.inputs.clear();
+			macro.framerate = 240.f;
+			status = "Recording: restart the level";
+		}
+
+		if (ImGui::RadioButton("Play", playerMode == PLAYBACK))
+		{
+			playerMode = PLAYBACK;
+			actionIndex = 0;
+			status = "Playback: restart the level";
+		}
+
+		ImGui::Separator();
+		ImGui::Text("Inputs: %d", (int)macro.inputs.size());
+		ImGui::Text("Frame: %d", currentFrame());
+
+		if (ImGui::Button("Save"))
+			saveMacro();
+		ImGui::SameLine();
+		if (ImGui::Button("Clear"))
+		{
+			macro.inputs.clear();
+			actionIndex = 0;
+		}
+
+		ImGui::Separator();
+		if (ImGui::Button("Refresh list"))
+			getMacros();
+
+		const char* preview = (selectedFile >= 0 && selectedFile < (int)files.size()) ? files[selectedFile].c_str() : "Select macro";
+		if (ImGui::BeginCombo("##gmomacros", preview))
+		{
+			for (int i = 0; i < (int)files.size(); i++)
+				if (ImGui::Selectable(files[i].c_str(), selectedFile == i))
+					selectedFile = i;
+			ImGui::EndCombo();
+		}
+
+		if (ImGui::Button("Load") && selectedFile >= 0 && selectedFile < (int)files.size())
+			loadMacro(files[selectedFile]);
+
+		if (!status.empty())
+			ImGui::TextWrapped("%s", status.c_str());
+	}
 }
 
 class $modify(GMOMacroBGL, GJBaseGameLayer)
@@ -250,15 +290,21 @@ class $modify(GMOMacroBGL, GJBaseGameLayer)
 
 class $modify(GMOMacroPlayLayer, PlayLayer)
 {
-	void resetLevel()
+	void storeCheckpoint(CheckpointObject* checkpoint)
 	{
-		PlayLayer::resetLevel();
-		Macrobot::onRespawn();
+		PlayLayer::storeCheckpoint(checkpoint);
+		Macrobot::onCheckpointStored(checkpoint);
 	}
 
 	void loadFromCheckpoint(CheckpointObject* checkpoint)
 	{
 		PlayLayer::loadFromCheckpoint(checkpoint);
-		Macrobot::onRespawn();
+		Macrobot::onCheckpointLoaded(checkpoint);
+	}
+
+	void resetLevel()
+	{
+		PlayLayer::resetLevel();
+		Macrobot::onReset();
 	}
 };
