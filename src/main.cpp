@@ -168,12 +168,12 @@ void initGUI()
 	generalWindow.size.y = 250;
 	GUI::addWindow(generalWindow);
 
-	GUI::Window bypassWindow("Bypass", [] { GUI::checkbox("Icon Bypass", "hack/icon_bypass", false); GUI::checkbox("Main Levels", "hack/main_levels", false); GUI::checkbox("Timeout Bypass", "hack/timeout_bypass", false); GUI::checkbox("Slider Limit", "hack/slider_limit", false); GUI::checkbox("Vault Bypass", "hack/vault_bypass", false); GUI::checkbox("Treasure Room", "hack/treasure_room_bypass", false); GUI::tooltip("Play every main level without completing the previous ones."); JsonPatches::drawFromPatches(JsonPatches::bypass); });
+	GUI::Window bypassWindow("Bypass", [] { GUI::checkbox("Icon Bypass", "hack/icon_bypass", false); GUI::checkbox("Main Levels", "hack/main_levels", false); GUI::checkbox("Timeout Bypass", "hack/timeout_bypass", false); GUI::checkbox("Slider Limit", "hack/slider_limit", false); GUI::checkbox("Vault Bypass", "hack/vault_bypass", false); GUI::checkbox("Treasure Room", "hack/treasure_room_bypass", false); GUI::checkbox("Text Length", "hack/text_length", false); GUI::checkbox("Character Filter", "hack/char_filter", false); GUI::tooltip("Play every main level without completing the previous ones."); JsonPatches::drawFromPatches(JsonPatches::bypass); });
 	bypassWindow.position = {1050, 50};
 	bypassWindow.size.y = 180;
 	GUI::addWindow(bypassWindow);
 
-	GUI::Window creatorWindow("Creator", [] { JsonPatches::drawFromPatches(JsonPatches::creator); });
+	GUI::Window creatorWindow("Creator", [] { GUI::checkbox("Copy Hack", "hack/copy_hack", false); GUI::checkbox("Object Limit Bypass", "hack/object_limit", false); JsonPatches::drawFromPatches(JsonPatches::creator); });
 	creatorWindow.position = {1300, 50};
 	creatorWindow.size.y = 200;
 	GUI::addWindow(creatorWindow);
