@@ -326,7 +326,7 @@ void initGUI()
 				}
 			});
 
-		GUI::checkbox("No Mirror Portal", "hack/no_mirror_portal", false);
+		GUI::checkbox("No Mirror Portal", "hack/no_mirror_portal", false); GUI::checkbox("No Camera Shake", "hack/no_shake", false); GUI::checkbox("No Camera Zoom", "hack/no_zoom", false); GUI::checkbox("No Ending Animation", "hack/no_end_anim", false);
 		GUI::checkbox("Anticheat Bypass", "hack/anticheat_bypass", false);
 		GUI::tooltip("Noclip no longer dies on the anti-cheat spike.\nForces Safe Mode: nothing is saved or submitted while enabled.");
 		JsonPatches::drawFromPatches(JsonPatches::level);
@@ -469,7 +469,7 @@ void initGUI()
 	GUI::addWindow(menuSettings);
 
 	GUI::Window playerWindow("Player", [] { 
-		{ GUI::checkbox("No Death Effect", "hack/no_death_effect", false); GUI::checkbox("Solid Wave Trail", "hack/solid_wave", false); GUI::checkbox("No Ghost Trail", "hack/no_ghost_trail", false); if (GUI::checkbox("NoClip", "patch/NoClip", false)) { Common::updateCheating(); SafeMode::updateAuto(); } GUI::tooltip("Hook based. Turns Safe Mode on automatically when Auto Safe Mode is enabled."); JsonPatches::drawFromPatches(JsonPatches::player); };
+		{ GUI::checkbox("No Death Effect", "hack/no_death_effect", false); GUI::checkbox("Solid Wave Trail", "hack/solid_wave", false); GUI::checkbox("No Spawn Effect", "hack/no_spawn_effect", false); GUI::checkbox("No Spider Dash", "hack/no_spider_dash", false); GUI::checkbox("No Burst Effect", "hack/no_burst_effect", false); GUI::checkbox("No Portal Lightning", "hack/no_lightning", false); GUI::checkbox("No Ghost Trail", "hack/no_ghost_trail", false); if (GUI::checkbox("NoClip", "patch/NoClip", false)) { Common::updateCheating(); SafeMode::updateAuto(); } GUI::tooltip("Hook based. Turns Safe Mode on automatically when Auto Safe Mode is enabled."); JsonPatches::drawFromPatches(JsonPatches::player); };
 		
 		GUI::checkbox("Show Trajectory", "player/show_trajectory/enabled");
 

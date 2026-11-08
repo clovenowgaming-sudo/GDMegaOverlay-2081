@@ -4,7 +4,7 @@
 		"win": "2.2081",
 		"android": "2.2081"
 	},
-	"version": "v1.0.0",
+	"version": "v1.1.0",
 	"id": "vinz.megaoverlay",
 	"name": "GD Mega Overlay (2.2081 port)",
 	"developers": [
@@ -12,7 +12,7 @@
 		"SpaghettDev",
 		"Vinz (port)"
 	],
-	"description": "GDMegaOverlay ported to GD 2.2081 / Geode 5.11.2 with an Android floating button. Mod By Vinz :3",
+	"description": "GDMegaOverlay ported to GD 2.2081 / Geode 5.11.2 with Android touch support, a draggable button, a new Macrobot and a video recorder. Mod By Vinz :3",
 	"repository": "https://github.com/maxnut/GDMegaOverlay",
 	"resources": {
 		"files": [
@@ -27,6 +27,7 @@
 		]
 	},
 	"dependencies": {
-		"geode.node-ids": ">=v1.9.1"
+		"geode.node-ids": ">=v1.9.1",
+		"eclipse.ffmpeg-api": ">=v1.2.0"
 	}
 }

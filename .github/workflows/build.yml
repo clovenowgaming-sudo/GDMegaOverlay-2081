@@ -15,12 +15,15 @@ jobs:
           - name: Android64
             os: ubuntu-latest
             target: Android64
+            optional: false
           - name: Android32
             os: ubuntu-latest
             target: Android32
+            optional: true
 
     name: ${{ matrix.config.name }}
     runs-on: ${{ matrix.config.os }}
+    continue-on-error: ${{ matrix.config.optional }}
 
     steps:
       - uses: actions/checkout@v4
@@ -31,6 +34,7 @@ jobs:
           combine: true
           target: ${{ matrix.config.target }}
           ccache-variant: ''
+          android-min-sdk: 24
 
   package:
     name: Package builds

@@ -1,55 +1,55 @@
-<div align="center">
+# GD Mega Overlay (2.2081 port)
 
-# GD Mega Overlay
-[![Discord](https://img.shields.io/discord/1035900688737255425?label=discord&logo=discord)](https://discord.gg/nbDjEg7SSU)
-![Downloads](https://img.shields.io/github/downloads/maxnut/GDMegaOverlay/total)
-</div>
+> **Mod By Vinz :3**
 
-## Description
+A Mega Hack style overlay for **Geometry Dash 2.2081** (Android), built with **Geode SDK 5.11.2**.
 
-Open Source, feature-rich, gui-integrated Geometry Dash mod menu. Currently supports Geometry Dash 2.204.
-
-![Menu screen](/img/screen.jpg)
-
-## Standard Installation
-1. [**Install Geode. This is required for the overlay to work!**](https://geode-sdk.org/install/)
-2. Open Geometry Dash.
-3. In the main menu, find the Geode button on the bottom of the UI. It looks the same as the Geode logo. Press it.
-4. Go onto the "Download" tab, found on the top of the UI.
-5. Scroll until you find "GD Mega Overlay", press "View" and then "Install". Restart Geometry Dash, you're done!
-
-You can use the overlay by pressing **Tab**.
-
-## Manual Installation
-
-> **Warning** <br>
-> Only download the source code for development purposes.[^1] See above to install the modification/overlay to your installation of Geometry Dash, or below to install manually.
----
-[**Install Geode. This is required for the overlay to work!**](https://geode-sdk.org/install/)
-
-Download the latest [build](https://github.com/maxnut/GDMegaOverlay/releases/latest) from the Github releases page. <br>
-
-Manual Installations using Steam:
-1. Go onto Steam, and go onto the Geometry Dash page in your library.
-2. Press the settings button, right of the Play button. It is shown as a cogwheel.
-3. Hover over the Manage submenu, and press "Browse Local Files". The folder in which the game is installed should pop up in Windows Explorer.
-4. Copy `maxnu.gd_mega_overlay.geode` to `\geode\mods\`. You can find `\geode\mods\` in the Windows Explorer window you opened from Steam.
+This project is a port of the open source [GDMegaOverlay](https://github.com/maxnut/GDMegaOverlay)
+by **maxnut** and **SpaghettDev**. The original targeted GD 2.204 on Windows and used hardcoded
+x86 offsets; this port replaces those with Geode hooks and adds Android support.
 
 ## Features
 
-* Basic hacks
-* Startpos Switcher
-* Macro Bot
-* Internal Recorder
-* Layout Mode
-* and much more!
+| Area | What works |
+|------|-----------|
+| UI | Original overlay windows, draggable round button, touch scrolling |
+| Macrobot | Record / Play / Save / Load, checkpoint aware frame counter |
+| Recorder | Video recording through the FFmpeg API mod, selectable codec / FPS / bitrate / scale |
+| Player | NoClip, No Death Effect, Solid Wave Trail, No Ghost Trail, No Spawn Effect, No Spider Dash, No Burst Effect, No Portal Lightning |
+| Level | Show Hitboxes, Safe Mode, Instant Complete, Anticheat Bypass, Layout Mode, No Mirror Portal, No Camera Shake, No Camera Zoom, No Ending Animation |
+| Bypass | Icon, Main Levels, Timeout, Slider Limit, Vault, Treasure Room, Text Length, Character Filter |
+| Creator | Copy Hack, Object Limit Bypass |
+
+### Not ported yet
+
+Hitbox Multiplier, Show Trajectory, TPS / Physics Bypass, Discord RPC, Keymaster / Guard / Gatekeeper vaults,
+Gauntlet and Level Edit bypasses, recorder audio. Contributions are welcome.
+
+## Safe Mode
+
+Cheats turn Safe Mode on automatically. While it is active nothing is saved or submitted.
+Instant Complete and Anticheat Bypass force it on.
+
+## Usage (Android)
+
+1. Install Geode and this mod (and the FFmpeg API mod for the recorder).
+2. Tap the round **M** button to open the overlay. Drag the button to move it.
+3. Drag vertically inside a window to scroll.
+
+## Building
+
+The mod is built with GitHub Actions (`.github/workflows/build.yml`) using
+[`geode-sdk/build-geode-mod`](https://github.com/geode-sdk/build-geode-mod). Push to the repository,
+then download the `Build Output` artifact.
+
+Local build: install the Geode CLI and SDK, then `geode build`.
 
 ## Credits
 
-[SpaghettDev](https://github.com/SpaghettDev) helped a ton with various features
+- **maxnut** and **SpaghettDev**: original GDMegaOverlay
+- **Dear ImGui**, and **matcool**'s gd-imgui-cocos
+- **Eclipse** / **maxnut**: FFmpeg API mod
+- **Geode** team: SDK and bindings
+- **Vinz**: 2.2081 / Android port
 
-[Prevter](https://github.com/Prevter) added multiple patches
-
-[mat](https://github.com/matcool) for internal recorder
-
-[^1]: You can download source code using ``git clone https://github.com/maxnut/GDMegaOverlay.git``, or on [github.com/maxnut/GDMegaOverlay](https://github.com/maxnut/GDMegaOverlay) (the page you are likely on) you can press "Code" and then press "Download Zip", unzip the zip file and modify to your liking. Recommended you create a fork and save your changes there.
+The original project's license terms apply to the code derived from it. See the upstream repository.
