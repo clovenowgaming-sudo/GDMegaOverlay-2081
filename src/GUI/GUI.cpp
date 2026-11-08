@@ -1,3 +1,4 @@
+#include <imgui_internal.h>
 #include "GUI.h"
 #include <Geode/Geode.hpp>
 #include <Geode/modify/CCKeyboardDispatcher.hpp>
@@ -166,8 +167,6 @@ void GUI::setLateInit(const std::function<void()>& func)
 {
 	lateInit = func;
 }
-
-#include <imgui_internal.h>
 
 // GMO-TOUCH-SCROLL
 // A vertical finger drag scrolls the window under the finger (no mouse wheel on phones).
