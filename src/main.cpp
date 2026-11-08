@@ -168,7 +168,7 @@ void initGUI()
 	generalWindow.size.y = 250;
 	GUI::addWindow(generalWindow);
 
-	GUI::Window bypassWindow("Bypass", [] { GUI::checkbox("Icon Bypass", "hack/icon_bypass", false); GUI::checkbox("Main Levels", "hack/main_levels", false); GUI::tooltip("Play every main level without completing the previous ones."); JsonPatches::drawFromPatches(JsonPatches::bypass); });
+	GUI::Window bypassWindow("Bypass", [] { GUI::checkbox("Icon Bypass", "hack/icon_bypass", false); GUI::checkbox("Main Levels", "hack/main_levels", false); GUI::checkbox("Timeout Bypass", "hack/timeout_bypass", false); GUI::checkbox("Slider Limit", "hack/slider_limit", false); GUI::checkbox("Vault Bypass", "hack/vault_bypass", false); GUI::checkbox("Treasure Room", "hack/treasure_room_bypass", false); GUI::tooltip("Play every main level without completing the previous ones."); JsonPatches::drawFromPatches(JsonPatches::bypass); });
 	bypassWindow.position = {1050, 50};
 	bypassWindow.size.y = 180;
 	GUI::addWindow(bypassWindow);
