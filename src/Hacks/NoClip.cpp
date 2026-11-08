@@ -13,7 +13,7 @@ class $modify(GMONoClipPlayLayer, PlayLayer)
 		if (Settings::get<bool>("patch/NoClip", false))
 		{
 			// keep the anti-cheat spike behaviour of the game untouched
-			if (object != m_anticheatSpike)
+			if (object != m_anticheatSpike || Settings::get<bool>("hack/anticheat_bypass", false))
 				return;
 		}
 

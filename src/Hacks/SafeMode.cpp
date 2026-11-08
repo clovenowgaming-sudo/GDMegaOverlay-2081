@@ -74,7 +74,7 @@ void SafeMode::updateState()
 
 static bool gmoSafeModeOn()
 {
-	return Settings::get<bool>("level/safe_mode/enabled");
+	return Settings::get<bool>("level/safe_mode/enabled") || Settings::get<bool>("level/instant_complete", false) || Settings::get<bool>("hack/anticheat_bypass", false);
 }
 
 #include <Geode/modify/GJGameLevel.hpp>

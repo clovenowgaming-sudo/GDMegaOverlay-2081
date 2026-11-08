@@ -168,7 +168,7 @@ void initGUI()
 	generalWindow.size.y = 250;
 	GUI::addWindow(generalWindow);
 
-	GUI::Window bypassWindow("Bypass", [] { GUI::checkbox("Icon Bypass", "hack/icon_bypass", false); JsonPatches::drawFromPatches(JsonPatches::bypass); });
+	GUI::Window bypassWindow("Bypass", [] { GUI::checkbox("Icon Bypass", "hack/icon_bypass", false); GUI::checkbox("Main Levels", "hack/main_levels", false); GUI::tooltip("Play every main level without completing the previous ones."); JsonPatches::drawFromPatches(JsonPatches::bypass); });
 	bypassWindow.position = {1050, 50};
 	bypassWindow.size.y = 180;
 	GUI::addWindow(bypassWindow);
@@ -327,6 +327,8 @@ void initGUI()
 			});
 
 		GUI::checkbox("No Mirror Portal", "hack/no_mirror_portal", false);
+		GUI::checkbox("Anticheat Bypass", "hack/anticheat_bypass", false);
+		GUI::tooltip("Noclip no longer dies on the anti-cheat spike.\nForces Safe Mode: nothing is saved or submitted while enabled.");
 		JsonPatches::drawFromPatches(JsonPatches::level);
 	});
 	levelWindow.position = {550, 50};

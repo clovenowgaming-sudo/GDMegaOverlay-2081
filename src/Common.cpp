@@ -199,7 +199,7 @@ void Common::updateCheating()
 	bool showTrajectory = Settings::get<bool>("player/show_trajectory/enabled", false);
 	bool frameStepper = Settings::get<bool>("macrobot/frame_step/enabled", false);
 
-	if (Settings::get<bool>("patch/NoClip", false) || speedhack != 1.f || Macrobot::playerMode == 0 || (showHitbox && !onDeath) || hidePause || hitboxMultiplier || noShaders || instantComplete || layoutMode || showTrajectory || frameStepper)
+	if (Settings::get<bool>("patch/NoClip", false) || Settings::get<bool>("hack/anticheat_bypass", false) || Settings::get<bool>("hack/main_levels", false) || speedhack != 1.f || Macrobot::playerMode == 0 || (showHitbox && !onDeath) || hidePause || hitboxMultiplier || noShaders || instantComplete || layoutMode || showTrajectory || frameStepper)
 	{
 		isCheating = true;
 		return;
