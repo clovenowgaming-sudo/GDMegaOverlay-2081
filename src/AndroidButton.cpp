@@ -12,37 +12,38 @@ using namespace geode::prelude;
 
 namespace
 {
+	constexpr float kRadius = 17.f;
 	constexpr float kHitPadding = 8.f;
 	constexpr float kDragThreshold = 6.f;
 
 	class GMOFloatingButton : public CCNode, public CCTouchDelegate
 	{
 		CCSprite* m_sprite = nullptr;
-		float m_radius = 17.f;
 		CCPoint m_touchStart = {0, 0};
 		CCPoint m_nodeStart = {0, 0};
 		bool m_tracking = false;
 		bool m_dragged = false;
 		bool m_registered = false;
 
-		void setPressed(bool pressed)
+		void redraw(bool pressed)
 		{
-			if (!m_sprite) return;
-			m_sprite->setColor(pressed ? ccColor3B{150, 150, 150} : ccColor3B{255, 255, 255});
+			if (!m_sprite)
+				return;
 			m_sprite->setOpacity(pressed ? 255 : 200);
+			m_sprite->setColor(pressed ? ccColor3B{170, 170, 170} : ccColor3B{255, 255, 255});
 		}
 
 		CCPoint clamp(CCPoint p)
 		{
 			auto win = CCDirector::get()->getWinSize();
-			p.x = std::clamp(p.x, m_radius, win.width - m_radius);
-			p.y = std::clamp(p.y, m_radius, win.height - m_radius);
+			p.x = std::clamp(p.x, kRadius, win.width - kRadius);
+			p.y = std::clamp(p.y, kRadius, win.height - kRadius);
 			return p;
 		}
 
 		bool hits(CCTouch* touch)
 		{
-			return ccpDistance(touch->getLocation(), this->getPosition()) <= m_radius + kHitPadding;
+			return ccpDistance(touch->getLocation(), this->getPosition()) <= kRadius + kHitPadding;
 		}
 
 	public:
@@ -63,20 +64,18 @@ namespace
 			if (!CCNode::init())
 				return false;
 
-			// round button sprite from the game's own sheet
-			m_sprite = CCSprite::createWithSpriteFrameName("GJ_button_01.png");
+			// round sprite shipped inside the mod (res/gmo_button.png)
+			m_sprite = CCSprite::create("gmo_button.png"_spr);
 			if (m_sprite)
 			{
-				m_sprite->setScale(0.6f);
-				m_radius = m_sprite->getContentSize().width * m_sprite->getScale() * 0.5f;
+				m_sprite->setScale(kRadius * 2.f / m_sprite->getContentSize().width);
 				this->addChild(m_sprite);
 			}
+			redraw(false);
 
 			auto label = CCLabelBMFont::create("M", "bigFont.fnt");
 			label->setScale(0.5f);
 			this->addChild(label);
-
-			setPressed(false);
 
 			auto win = CCDirector::get()->getWinSize();
 			float x = Mod::get()->getSavedValue<float>("android_button/x", win.width - 30.f);
@@ -116,7 +115,7 @@ namespace
 			m_dragged = false;
 			m_touchStart = touch->getLocation();
 			m_nodeStart = this->getPosition();
-			setPressed(true);
+			redraw(true);
 			return true;
 		}
 
@@ -139,7 +138,7 @@ namespace
 				return;
 
 			m_tracking = false;
-			setPressed(false);
+			redraw(false);
 
 			if (m_dragged)
 			{
@@ -153,7 +152,7 @@ namespace
 		void ccTouchCancelled(CCTouch*, CCEvent*) override
 		{
 			m_tracking = false;
-			setPressed(false);
+			redraw(false);
 		}
 	};
 

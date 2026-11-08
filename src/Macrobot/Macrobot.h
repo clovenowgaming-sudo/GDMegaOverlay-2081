@@ -1,28 +1,28 @@
 #pragma once
-// PORT 2.2081: Macrobot needs PlayerObject/PlayLayer checkpoint layouts that were hardcoded
-// by offset for 2.204. The original is kept in legacy_2204/ . This stub keeps the rest of the
-// overlay compiling and shows a notice in the Macrobot window.
-#include <imgui.h>
 #include <vector>
-#include <string>
 
 namespace Macrobot
 {
 	enum PlayerMode { DISABLED = -1, PLAYBACK = 0, RECORDING = 1 };
 
-	struct StubMacro
+	struct Input
 	{
-		float framerate = 240.f;
-		std::vector<int> inputs;
+		int frame = 0;
+		int button = 1;
+		bool down = false;
+		bool p1 = true;
 	};
 
-	inline PlayerMode playerMode = DISABLED;
-	inline unsigned int actionIndex = 0;
-	inline StubMacro macro;
-
-	inline void getMacros() {}
-	inline void drawWindow()
+	struct Macro
 	{
-		ImGui::TextWrapped("Macrobot is not ported to GD 2.2081 yet.");
-	}
+		float framerate = 240.f;
+		std::vector<Input> inputs;
+	};
+
+	extern PlayerMode playerMode;
+	extern unsigned int actionIndex;
+	extern Macro macro;
+
+	void getMacros();
+	void drawWindow();
 }

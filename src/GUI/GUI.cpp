@@ -167,6 +167,71 @@ void GUI::setLateInit(const std::function<void()>& func)
 	lateInit = func;
 }
 
+#include <imgui_internal.h>
+
+// GMO-TOUCH-SCROLL
+// A vertical finger drag scrolls the window under the finger (no mouse wheel on phones).
+static void gmoTouchScroll()
+{
+	ImGuiContext& g = *ImGui::GetCurrentContext();
+	ImGuiIO& io = ImGui::GetIO();
+
+	static bool tracking = false;
+	static bool scrolling = false;
+	static ImGuiID winId = 0;
+	static ImVec2 start = ImVec2(0, 0);
+
+	if (ImGui::IsMouseClicked(0))
+	{
+		tracking = false;
+		scrolling = false;
+		if (g.HoveredWindow)
+		{
+			tracking = true;
+			winId = g.HoveredWindow->ID;
+			start = io.MousePos;
+		}
+	}
+
+	if (!tracking || !ImGui::IsMouseDown(0))
+	{
+		tracking = false;
+		scrolling = false;
+		return;
+	}
+
+	// the user is moving a window by its title bar: don't scroll
+	if (g.MovingWindow)
+	{
+		tracking = false;
+		scrolling = false;
+		return;
+	}
+
+	ImGuiWindow* w = ImGui::FindWindowByID(winId);
+	if (!w)
+	{
+		tracking = false;
+		return;
+	}
+
+	if (!scrolling)
+	{
+		float dx = io.MousePos.x - start.x;
+		float dy = io.MousePos.y - start.y;
+		float slop = 8.f * (GUI::uiSizeFactor > 0.5f ? GUI::uiSizeFactor : 0.5f);
+		// vertical drags scroll, horizontal drags stay with sliders / widgets
+		if (std::abs(dy) > slop && std::abs(dy) > std::abs(dx) * 1.2f)
+		{
+			scrolling = true;
+			ImGui::ClearActiveID(); // cancel the pressed button/checkbox so it doesn't toggle on release
+		}
+	}
+
+	if (scrolling)
+		ImGui::SetScrollY(w, w->Scroll.y - io.MouseDelta.y);
+}
+
 void GUI::draw()
 {
 	uiSizeFactor = CCDirector::sharedDirector()->getOpenGLView()->getFrameSize().width / 1920.0f;
@@ -174,6 +239,8 @@ void GUI::draw()
 
 	if (!isVisible && !shortcutLoop)
 		return;
+
+	gmoTouchScroll();
 
 	ImGui::GetStyle() = loadedStyle;
 

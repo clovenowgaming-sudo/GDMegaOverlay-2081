@@ -168,7 +168,7 @@ void initGUI()
 	generalWindow.size.y = 250;
 	GUI::addWindow(generalWindow);
 
-	GUI::Window bypassWindow("Bypass", [] { JsonPatches::drawFromPatches(JsonPatches::bypass); });
+	GUI::Window bypassWindow("Bypass", [] { GUI::checkbox("Icon Bypass", "hack/icon_bypass", false); JsonPatches::drawFromPatches(JsonPatches::bypass); });
 	bypassWindow.position = {1050, 50};
 	bypassWindow.size.y = 180;
 	GUI::addWindow(bypassWindow);
@@ -466,7 +466,7 @@ void initGUI()
 	GUI::addWindow(menuSettings);
 
 	GUI::Window playerWindow("Player", [] { 
-		{ if (GUI::checkbox("NoClip", "patch/NoClip", false)) { Common::updateCheating(); SafeMode::updateAuto(); } GUI::tooltip("Hook based. Turns Safe Mode on automatically when Auto Safe Mode is enabled."); JsonPatches::drawFromPatches(JsonPatches::player); };
+		{ GUI::checkbox("No Death Effect", "hack/no_death_effect", false); if (GUI::checkbox("NoClip", "patch/NoClip", false)) { Common::updateCheating(); SafeMode::updateAuto(); } GUI::tooltip("Hook based. Turns Safe Mode on automatically when Auto Safe Mode is enabled."); JsonPatches::drawFromPatches(JsonPatches::player); };
 		
 		GUI::checkbox("Show Trajectory", "player/show_trajectory/enabled");
 

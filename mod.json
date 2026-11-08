@@ -21,6 +21,9 @@
 			"res/Roboto-Regular.ttf",
 			"res/default_windows.json",
 			"res/shadow.png"
+		],
+		"sprites": [
+			"res/gmo_button.png"
 		]
 	},
 	"dependencies": {
