@@ -427,25 +427,138 @@ void GUI::saveStyle(const std::filesystem::path& name)
 	styleFile.close();
 }
 
+#include <fstream>
+#include <vector>
+#include <iterator>
+#include <cstring>
+
+// GMO-DEFAULT-STYLE-BEGIN
+// Original GDMegaOverlay look (values extracted from the shipped Style.style).
+static void gmoFillDefaultStyle(ImGuiStyle& s)
+{
+	s.Alpha = 1.0f;
+	s.DisabledAlpha = 0.5f;
+	s.WindowPadding = ImVec2(15.0f, 15.0f);
+	s.WindowRounding = 0.0f;
+	s.WindowBorderSize = 0.0f;
+	s.WindowMinSize = ImVec2(32.0f, 32.0f);
+	s.WindowTitleAlign = ImVec2(0.5f, 0.5f);
+	s.WindowMenuButtonPosition = (ImGuiDir)0;
+	s.ChildRounding = 0.0f;
+	s.ChildBorderSize = 1.0f;
+	s.PopupRounding = 0.0f;
+	s.PopupBorderSize = 1.0f;
+	s.FramePadding = ImVec2(5.0f, 4.0f);
+	s.FrameRounding = 0.0f;
+	s.FrameBorderSize = 0.0f;
+	s.ItemSpacing = ImVec2(12.0f, 7.0f);
+	s.ItemInnerSpacing = ImVec2(8.0f, 6.0f);
+	s.CellPadding = ImVec2(4.0f, 2.0f);
+	s.TouchExtraPadding = ImVec2(0.0f, 0.0f);
+	s.IndentSpacing = 25.0f;
+	s.ColumnsMinSpacing = 6.0f;
+	s.ScrollbarSize = 10.0f;
+	s.ScrollbarRounding = 9.0f;
+	s.GrabMinSize = 5.0f;
+	s.GrabRounding = 0.0f;
+	s.LogSliderDeadzone = 4.0f;
+	s.TabRounding = 4.0f;
+	s.TabBorderSize = 0.0f;
+	s.TabMinWidthForCloseButton = 0.0f;
+	s.ColorButtonPosition = (ImGuiDir)1;
+	s.ButtonTextAlign = ImVec2(0.5f, 0.5f);
+	s.SelectableTextAlign = ImVec2(0.0f, 0.0f);
+	s.DisplayWindowPadding = ImVec2(19.0f, 19.0f);
+	s.DisplaySafeAreaPadding = ImVec2(3.0f, 3.0f);
+	s.MouseCursorScale = 1.0f;
+	s.AntiAliasedLines = true;
+	s.AntiAliasedLinesUseTex = true;
+	s.AntiAliasedFill = true;
+	s.CurveTessellationTol = 1.25f;
+	s.CircleTessellationMaxError = 1.6f;
+	s.Colors[0] = ImVec4(0.8f, 0.8f, 0.83f, 1.0f);
+	s.Colors[1] = ImVec4(1.0f, 0.03f, 0.03f, 1.0f);
+	s.Colors[2] = ImVec4(0.09417f, 0.094169f, 0.094169f, 1.0f);
+	s.Colors[3] = ImVec4(0.07f, 0.07f, 0.09f, 1.0f);
+	s.Colors[4] = ImVec4(0.06f, 0.05f, 0.07f, 1.0f);
+	s.Colors[5] = ImVec4(0.43f, 0.43f, 0.5f, 0.5f);
+	s.Colors[6] = ImVec4(0.92f, 0.91f, 0.88f, 0.0f);
+	s.Colors[7] = ImVec4(0.14f, 0.15f, 0.18f, 0.3f);
+	s.Colors[8] = ImVec4(0.14f, 0.15f, 0.18f, 0.4f);
+	s.Colors[9] = ImVec4(0.14f, 0.15f, 0.18f, 0.5f);
+	s.Colors[10] = ImVec4(0.685531f, 0.171672f, 0.717647f, 1.0f);
+	s.Colors[11] = ImVec4(0.685531f, 0.171672f, 0.717647f, 1.0f);
+	s.Colors[12] = ImVec4(0.685531f, 0.171672f, 0.717647f, 1.0f);
+	s.Colors[13] = ImVec4(0.1f, 0.09f, 0.12f, 1.0f);
+	s.Colors[14] = ImVec4(0.1f, 0.09f, 0.12f, 1.0f);
+	s.Colors[15] = ImVec4(0.8f, 0.8f, 0.83f, 0.31f);
+	s.Colors[16] = ImVec4(0.56f, 0.56f, 0.58f, 1.0f);
+	s.Colors[17] = ImVec4(0.06f, 0.05f, 0.07f, 1.0f);
+	s.Colors[18] = ImVec4(0.0f, 0.8f, 0.0f, 0.611765f);
+	s.Colors[19] = ImVec4(0.8f, 0.8f, 0.83f, 0.31f);
+	s.Colors[20] = ImVec4(0.06f, 0.05f, 0.07f, 1.0f);
+	s.Colors[21] = ImVec4(0.250237f, 0.236482f, 0.269058f, 0.3f);
+	s.Colors[22] = ImVec4(0.24f, 0.23f, 0.29f, 1.0f);
+	s.Colors[23] = ImVec4(0.56f, 0.56f, 0.58f, 1.0f);
+	s.Colors[24] = ImVec4(0.26f, 0.59f, 0.98f, 0.31f);
+	s.Colors[25] = ImVec4(0.56f, 0.56f, 0.58f, 1.0f);
+	s.Colors[26] = ImVec4(0.06f, 0.05f, 0.07f, 1.0f);
+	s.Colors[27] = ImVec4(0.43f, 0.43f, 0.5f, 0.5f);
+	s.Colors[28] = ImVec4(0.1f, 0.4f, 0.75f, 0.78f);
+	s.Colors[29] = ImVec4(0.1f, 0.4f, 0.75f, 1.0f);
+	s.Colors[30] = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
+	s.Colors[31] = ImVec4(0.56f, 0.56f, 0.58f, 1.0f);
+	s.Colors[32] = ImVec4(0.06f, 0.05f, 0.07f, 1.0f);
+	s.Colors[33] = ImVec4(0.595f, 0.085f, 0.085f, 1.0f);
+	s.Colors[34] = ImVec4(0.49f, 0.07f, 0.07f, 1.0f);
+	s.Colors[35] = ImVec4(0.595f, 0.085f, 0.085f, 1.0f);
+	s.Colors[36] = ImVec4(0.42f, 0.06f, 0.06f, 1.0f);
+	s.Colors[37] = ImVec4(0.42f, 0.06f, 0.06f, 1.0f);
+	s.Colors[38] = ImVec4(0.4f, 0.39f, 0.38f, 0.63f);
+	s.Colors[39] = ImVec4(0.25f, 1.0f, 0.0f, 1.0f);
+	s.Colors[40] = ImVec4(0.4f, 0.39f, 0.38f, 0.63f);
+	s.Colors[41] = ImVec4(0.25f, 1.0f, 0.0f, 1.0f);
+	s.Colors[42] = ImVec4(0.19f, 0.19f, 0.2f, 1.0f);
+	s.Colors[43] = ImVec4(0.31f, 0.31f, 0.35f, 1.0f);
+	s.Colors[44] = ImVec4(0.23f, 0.23f, 0.25f, 1.0f);
+	s.Colors[45] = ImVec4(0.0f, 0.0f, 0.0f, 0.0f);
+	s.Colors[46] = ImVec4(1.0f, 1.0f, 1.0f, 0.06f);
+	s.Colors[47] = ImVec4(0.25f, 1.0f, 0.0f, 0.43f);
+	s.Colors[48] = ImVec4(1.0f, 1.0f, 0.0f, 0.9f);
+	s.Colors[49] = ImVec4(0.26f, 0.59f, 0.98f, 1.0f);
+	s.Colors[50] = ImVec4(1.0f, 1.0f, 1.0f, 0.7f);
+	s.Colors[51] = ImVec4(0.8f, 0.8f, 0.8f, 0.2f);
+	s.Colors[52] = ImVec4(0.1f, 0.1f, 0.1f, 0.73f);
+}
+
 void GUI::loadStyle(const std::filesystem::path& name)
 {
-	std::ifstream styleFile(name, std::ios::binary);
-	if (styleFile)
+	ImGuiStyle s;
+	gmoFillDefaultStyle(s);
+	float scale = 16.f;
+	bool exact = false;
+
+	std::vector<char> buf;
 	{
-		styleFile.seekg(0, std::ios::end);
-		int size = styleFile.tellg();
-		styleFile.seekg(0, std::ios::beg);
-
-		styleFile.read((char*)&loadedStyle, sizeof(ImGuiStyle));
-
-		if(size > sizeof(ImGuiStyle))
-			styleFile.read((char*)&fontScale, sizeof(float));
-		else
-			fontScale = 16.f;
+		std::ifstream styleFile(name, std::ios::binary);
+		if (styleFile)
+			buf.assign((std::istreambuf_iterator<char>(styleFile)), std::istreambuf_iterator<char>());
 	}
-	
-	styleFile.close();
+
+	// saved by the same ImGui version: raw copy. Anything else (old 1.89 file) -> defaults above.
+	if (buf.size() == sizeof(ImGuiStyle) || buf.size() == sizeof(ImGuiStyle) + sizeof(float))
+	{
+		std::memcpy((void*)&s, buf.data(), sizeof(ImGuiStyle));
+		if (buf.size() > sizeof(ImGuiStyle))
+			std::memcpy(&scale, buf.data() + sizeof(ImGuiStyle), sizeof(float));
+		exact = true;
+	}
+
+	loadedStyle = s;
+	fontScale = scale;
+	geode::log::info("[GMO] loadStyle '{}': file={} bytes, sizeof(ImGuiStyle)={}, exact={}", name.string(), buf.size(), sizeof(ImGuiStyle), exact);
 }
+// GMO-DEFAULT-STYLE-END
 
 void GUI::setFont(const std::filesystem::path& font)
 {
