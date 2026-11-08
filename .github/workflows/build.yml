@@ -18,8 +18,6 @@ jobs:
           - name: Android32
             os: ubuntu-latest
             target: Android32
-          - name: Windows
-            os: windows-latest
 
     name: ${{ matrix.config.name }}
     runs-on: ${{ matrix.config.os }}
@@ -32,6 +30,7 @@ jobs:
         with:
           combine: true
           target: ${{ matrix.config.target }}
+          ccache-variant: ''
 
   package:
     name: Package builds
