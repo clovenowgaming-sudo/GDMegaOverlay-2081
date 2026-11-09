@@ -15,4 +15,8 @@ namespace Record
 	int currentFps();
 	void captureFrame();
 	void drawWindow();
+
+	void onLevelStart();
+	void onLevelComplete();
+	void onLevelExit();
 }

@@ -1,10 +1,12 @@
 // Internal video recorder using the FFmpeg API mod (eclipse.ffmpeg-api).
 // While recording, the game is stepped with a fixed delta (1/fps): every rendered frame is one video frame.
 #include "Record.h"
+#include "../Settings.hpp"
 
 #include <Geode/Geode.hpp>
 #include <Geode/modify/CCDirector.hpp>
 #include <Geode/modify/CCScheduler.hpp>
+#include <Geode/modify/PlayLayer.hpp>
 
 #include <eclipse.ffmpeg-api/include/events.hpp>
 
@@ -37,6 +39,8 @@ namespace Record
 		int scaleIndex = 1;
 		int srcW = 0, srcH = 0, outW = 0, outH = 0;
 		unsigned int frames = 0;
+		unsigned int stopAtFrame = 0;
+		bool autoStarted = false;
 		std::string status;
 		std::string lastFile;
 		std::vector<uint8_t> readBuffer;
@@ -121,6 +125,7 @@ namespace Record
 		}
 
 		frames = 0;
+		stopAtFrame = 0;
 		lastFile = path.string();
 		recorder.m_recording = true;
 		status = "Recording...";
@@ -129,6 +134,7 @@ namespace Record
 	static void stopRecording()
 	{
 		recorder.m_recording = false;
+		stopAtFrame = 0;
 		if (encoder)
 		{
 			encoder->stop();
@@ -159,6 +165,37 @@ namespace Record
 
 		encoder->writeFrame(frameBuffer);
 		frames++;
+
+		if (stopAtFrame > 0 && frames >= stopAtFrame)
+		{
+			stopRecording();
+			autoStarted = false;
+		}
+	}
+
+	void onLevelStart()
+	{
+		if (Settings::get<bool>("recorder/auto", false) && !recorder.m_recording)
+		{
+			startRecording();
+			autoStarted = recorder.m_recording;
+		}
+	}
+
+	void onLevelComplete()
+	{
+		if (recorder.m_recording && autoStarted)
+		{
+			float extra = Settings::get<float>("recorder/extra_seconds", 3.f);
+			stopAtFrame = frames + (unsigned int)(extra * fpsOptions[fpsIndex]) + 1;
+		}
+	}
+
+	void onLevelExit()
+	{
+		if (recorder.m_recording && autoStarted)
+			stopRecording();
+		autoStarted = false;
 	}
 
 	void drawWindow()
@@ -169,7 +206,10 @@ namespace Record
 		{
 			ImGui::Text("Recording: %u frames (%.1fs)", frames, frames / (float)fpsOptions[fpsIndex]);
 			if (ImGui::Button("Stop recording"))
+			{
 				stopRecording();
+				autoStarted = false;
+			}
 		}
 		else
 		{
@@ -209,6 +249,15 @@ namespace Record
 			}
 		}
 
+		ImGui::Separator();
+		bool autoRec = Settings::get<bool>("recorder/auto", false);
+		if (ImGui::Checkbox("Auto record in levels", &autoRec))
+			Mod::get()->setSavedValue<bool>("recorder/auto", autoRec);
+
+		float extra = Settings::get<float>("recorder/extra_seconds", 3.f);
+		if (ImGui::SliderFloat("Stop after complete (s)", &extra, 0.f, 15.f, "%.1f"))
+			Mod::get()->setSavedValue<float>("recorder/extra_seconds", extra);
+
 		if (!status.empty())
 			ImGui::TextWrapped("%s", status.c_str());
 		if (!lastFile.empty())
@@ -235,5 +284,27 @@ class $modify(GMORecordDirector, CCDirector)
 		CCDirector::drawScene();
 		if (Record::isRecording())
 			Record::captureFrame();
+	}
+};
+
+// auto start / stop
+class $modify(GMORecordPlayLayer, PlayLayer)
+{
+	void setupHasCompleted()
+	{
+		PlayLayer::setupHasCompleted();
+		Record::onLevelStart();
+	}
+
+	void levelComplete()
+	{
+		PlayLayer::levelComplete();
+		Record::onLevelComplete();
+	}
+
+	void onExit()
+	{
+		Record::onLevelExit();
+		PlayLayer::onExit();
 	}
 };

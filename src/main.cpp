@@ -23,6 +23,7 @@ using namespace geode::prelude;
 #include "Macrobot/Clickpacks.h"
 #include "Macrobot/Macrobot.h"
 #include "Macrobot/Record.h"
+#include "UpdateCheck.hpp"
 #include "Settings.hpp"
 #include "GUI/Blur.h"
 #include "GUI/DirectoryCombo.h"
@@ -177,6 +178,31 @@ void initGUI()
 	creatorWindow.position = {1300, 50};
 	creatorWindow.size.y = 200;
 	GUI::addWindow(creatorWindow);
+
+	GUI::Window toolsWindow("Tools", [] {
+		GUI::checkbox("Auto Checkpoint", "practice/auto_checkpoint", false);
+		GUI::tooltip("Practice mode: places a checkpoint every N seconds.");
+		{
+			float v = Settings::get<float>("practice/checkpoint_interval", 2.f);
+			if (ImGui::SliderFloat("Interval (s)", &v, 0.5f, 10.f, "%.1f"))
+				Mod::get()->setSavedValue<float>("practice/checkpoint_interval", v);
+		}
+
+		ImGui::Separator();
+		GUI::checkbox("Instant Respawn", "practice/instant_respawn", false);
+		{
+			float v = Settings::get<float>("practice/respawn_time", 0.f);
+			if (ImGui::SliderFloat("Respawn time (s)", &v, 0.f, 1.f, "%.2f"))
+				Mod::get()->setSavedValue<float>("practice/respawn_time", v);
+		}
+
+		ImGui::Separator();
+		if (ImGui::Button("Check for updates"))
+			UpdateCheck::run(true);
+	});
+	toolsWindow.position = {1550, 420};
+	toolsWindow.size.y = 280;
+	GUI::addWindow(toolsWindow);
 
 	GUI::Window globalWindow("Global", [] {
 		if (GUI::checkbox("Discord RPC", "general/discordrpc/enabled"))

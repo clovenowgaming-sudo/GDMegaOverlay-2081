@@ -18,6 +18,7 @@
 
 #include "Blur.h"
 #include "../AndroidButton.hpp"
+#include "../UpdateCheck.hpp"
 
 using namespace geode::prelude;
 
@@ -76,6 +77,8 @@ class $modify(MenuLayer)
 			GUI::canToggle = true;
 		}
 		GUI::hasLateInit = true;
+
+		UpdateCheck::run(false);
 
 		#ifdef GEODE_IS_ANDROID
 		AndroidButton::ensureCreated();
@@ -231,6 +234,17 @@ static void gmoTouchScroll()
 		ImGui::SetScrollY(w, w->Scroll.y - io.MouseDelta.y);
 }
 
+// faint credit in the top-right corner while the overlay is open
+static void gmoWatermark()
+{
+	ImDrawList* dl = ImGui::GetForegroundDrawList();
+	const char* text = "Mod By Vinz :3";
+	ImVec2 size = ImGui::CalcTextSize(text);
+	float margin = 14.f * (GUI::uiSizeFactor > 0.5f ? GUI::uiSizeFactor : 0.5f);
+	ImVec2 pos(ImGui::GetIO().DisplaySize.x - size.x - margin, margin);
+	dl->AddText(pos, IM_COL32(255, 255, 255, 70), text);
+}
+
 void GUI::draw()
 {
 	uiSizeFactor = CCDirector::sharedDirector()->getOpenGLView()->getFrameSize().width / 1920.0f;
@@ -240,6 +254,7 @@ void GUI::draw()
 		return;
 
 	gmoTouchScroll();
+	gmoWatermark();
 
 	ImGui::GetStyle() = loadedStyle;
 
